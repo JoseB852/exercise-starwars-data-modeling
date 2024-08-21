@@ -7,23 +7,53 @@ from eralchemy2 import render_er
 
 Base = declarative_base()
 
-class Person(Base):
-    __tablename__ = 'person'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
+class User(Base):
+    __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
+    username = Column(String(250), nullable=False, unique=True)
+    email = Column(String(50), nullable=False, unique=True)
+    password = Column(String(50), nullable=False, unique=True)
+    firstname = Column (String(250), nullable=False)
+    lastname = Column(String(250), nullable=False)
 
-class Address(Base):
-    __tablename__ = 'address'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
+class Planets (Base):
+    __tablename__ = 'plantes'
     id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+    name = Column (String(250), nullable=False, unique=True)
+
+
+class Films (Base):
+    __tablename__ = 'films'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100),nullable=False)
+    year = Column(Integer,nullable=False,unique=True)
+    director = Column(String(50),nullable=False)
+
+class Characters (Base):
+    __tablename__ = 'charcaters'
+    id = Column (Integer, primary_key=True)
+    name = Column (String (250),nullable=False, unique=True)
+    homeworld_id = Column(Integer, ForeignKey('planets.id'))
+    homeworld = relationship(Planets)
+    films_id = Column(Integer,ForeignKey('films.id'))
+    films = relationship(Films)
+
+class Favorite_Plantes (Base):
+    __tablename__ ='favorites_planets'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    users = relationship(User)
+    planets_id = Column(Integer, ForeignKey('plantes.id'))
+    planets = relationship(Planets)
+
+class Characters_Films (Base):
+    __tablename__ = 'characters_films'
+    id = Column(Integer, primary_key=True)
+    character_id = Column(Integer, ForeignKey('character.id'))
+    character =relationship(Characters)
+    films_id = Column(Integer, ForeignKey('films.id'))
+    films = relationship(Films)
+
 
     def to_dict(self):
         return {}
